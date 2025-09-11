@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: connector-config
+  namespace: {{ .Values.namespace }}
+data:
+  config.yaml: |
+    token: {{ .Values.config.token | quote }}
+    device_state_path: /etc/border0-device/state.yaml
+
