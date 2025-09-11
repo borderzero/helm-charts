@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: border0-connector
+  labels:
+    app: border0-connector
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: border0-connector
+  template:
+    metadata:
+      labels:
+        app: border0-connector
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - name: border0-connector
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["connector", "start", "--config", "/etc/border0-connector/config.yaml"]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/border0-connector
+            - name: dev-net-tun
+              mountPath: /dev/net/tun
+          securityContext:
+            privileged: true
+            capabilities:
+              add: [ "NET_ADMIN", "NET_RAW" ]
+      volumes:
+        - name: config
+          configMap:
+            name: connector-config
+        - name: dev-net-tun
+          hostPath:
+            path: /dev/net/tun
+

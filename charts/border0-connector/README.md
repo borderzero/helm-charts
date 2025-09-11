@@ -1,10 +1,7 @@
-# Helm-Charts
+# border0-connector
 
-Border0 managed Helm charts:
+Helm chart to deploy the Border0 Connector
 
-| Chart Name           | Description                            |
-|----------------------|----------------------------------------|
-| [border0-connector](./charts/border0-connector) | Helm chart to deploy the Border0 Connector |
 
 ## Usage
 

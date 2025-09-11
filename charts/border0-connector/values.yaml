@@ -1,0 +1,17 @@
+image:
+  repository: ghcr.io/borderzero/border0
+  tag: latest
+  pullPolicy: Always
+
+serviceAccount:
+  name: border0-connector
+
+rbac:
+  create: true
+  name: border0-connector
+
+config:
+  token: "REPLACE_ME_WITH_YOUR_TOKEN"
+
+namespace: default
+

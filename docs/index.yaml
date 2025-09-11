@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  border0-connector:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2025-09-11T14:16:37.793659-04:00"
+    description: Helm chart for deploying the Border0 Connector
+    digest: 365f6a500fdee1024e0f0a4eb31f222a204aa243214edee48abb6111693fd51a
+    name: border0-connector
+    type: application
+    urls:
+    - https://borderzero.github.io/helm-charts/border0-connector-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-09-11T14:16:37.79312-04:00"
