@@ -31,8 +31,8 @@ spec:
               add: [ "NET_ADMIN", "NET_RAW" ]
       volumes:
         - name: config
-          configMap:
-            name: connector-config
+          secret:
+            secretName: connector-config
         - name: dev-net-tun
           hostPath:
             path: /dev/net/tun
