@@ -13,5 +13,3 @@ rbac:
 config:
   token: "REPLACE_ME_WITH_YOUR_TOKEN"
 
-namespace: default
-
