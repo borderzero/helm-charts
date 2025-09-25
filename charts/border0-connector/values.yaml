@@ -2,6 +2,7 @@ image:
   repository: ghcr.io/borderzero/border0
   tag: latest
   pullPolicy: Always
+  override: null
 
 serviceAccount:
   name: border0-connector
@@ -12,4 +13,3 @@ rbac:
 
 config:
   token: "REPLACE_ME_WITH_YOUR_TOKEN"
-

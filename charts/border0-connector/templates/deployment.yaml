@@ -17,7 +17,11 @@ spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
         - name: border0-connector
+{{- if .Values.image.override }}
+          image: "{{ .Values.image.override }}"
+{{- else }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+{{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args: ["connector", "start", "--config", "/etc/border0-connector/config.yaml"]
           volumeMounts:

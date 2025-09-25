@@ -21,4 +21,10 @@ helm install border0-connector border0/border0-connector \
   --set config.token="eyJhbGciOiJIUzI1NiIsIn..."
 ```
 
+To run a custom container image, set `image.override` to the full image reference:
+
+```
+  --set image.override="ghcr.io/borderzero/border0:dev"
+```
+
 Note: The chart uses the Helm release namespace for namespaced resources. Set the namespace with `--namespace`.
