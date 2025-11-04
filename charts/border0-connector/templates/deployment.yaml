@@ -23,10 +23,21 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
 {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["connector", "start", "--config", "/etc/border0-connector/config.yaml"]
+          args:
+            - "connector"
+            - "start"
+{{- if .Values.config.inviteCode }}
+            - "--invite={{ .Values.config.inviteCode }}"
+            - "--token-persistence-mode=k8s-secret"
+            - "--k8s-secret={{ .Values.config.secretName }}"
+{{- else }}
+            - "--config=/etc/border0-connector/config.yaml"
+{{- end }}
           volumeMounts:
+{{- if .Values.config.token }}
             - name: config
               mountPath: /etc/border0-connector
+{{- end }}
             - name: dev-net-tun
               mountPath: /dev/net/tun
           securityContext:
@@ -36,7 +47,10 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: connector-config
+            secretName: {{ .Values.config.secretName }}
+{{- if .Values.config.inviteCode }}
+            optional: true
+{{- end }}
         - name: dev-net-tun
           hostPath:
             path: /dev/net/tun
