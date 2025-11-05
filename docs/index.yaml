@@ -3,7 +3,17 @@ entries:
   border0-connector:
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-04T15:40:35.481133-08:00"
+    created: "2025-11-05T12:14:24.434902-08:00"
+    description: Helm chart for deploying the Border0 Connector
+    digest: a0ac264bff0c1ef145d3a574123b377e9a39f663aceaf2d922642aa2858a39df
+    name: border0-connector
+    type: application
+    urls:
+    - https://borderzero.github.io/helm-charts/border0-connector-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
+    appVersion: latest
+    created: "2025-11-05T12:14:24.43475-08:00"
     description: Helm chart for deploying the Border0 Connector
     digest: afb6048d13b4266a58b5cb190fd1dd31c64493fe6be79fcf2c1b6521d9e3ca86
     name: border0-connector
@@ -13,7 +23,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-04T15:40:35.480944-08:00"
+    created: "2025-11-05T12:14:24.434506-08:00"
     description: Helm chart for deploying the Border0 Connector
     digest: aaaf7628a453b0b513ef6246099b94aaa9837efb4f438bc5deacd38c8c9998f7
     name: border0-connector
@@ -23,7 +33,7 @@ entries:
     version: 0.3.1
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-04T15:40:35.48054-08:00"
+    created: "2025-11-05T12:14:24.433948-08:00"
     description: Helm chart for deploying the Border0 Connector
     digest: bb4066f82aafc652ca5bdb1167f0566910b76735d6a8a9a85b97eedd56167dee
     name: border0-connector
@@ -33,7 +43,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-04T15:40:35.480187-08:00"
+    created: "2025-11-05T12:14:24.433624-08:00"
     description: Helm chart for deploying the Border0 Connector
     digest: e55e26d905f398f3c9d3e7e167c1a9c0fe7f7115d4bc45ff842efae4f760048d
     name: border0-connector
@@ -43,7 +53,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: latest
-    created: "2025-11-04T15:40:35.479285-08:00"
+    created: "2025-11-05T12:14:24.433371-08:00"
     description: Helm chart for deploying the Border0 Connector
     digest: 365f6a500fdee1024e0f0a4eb31f222a204aa243214edee48abb6111693fd51a
     name: border0-connector
@@ -51,4 +61,4 @@ entries:
     urls:
     - https://borderzero.github.io/helm-charts/border0-connector-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-04T15:40:35.478504-08:00"
+generated: "2025-11-05T12:14:24.432638-08:00"

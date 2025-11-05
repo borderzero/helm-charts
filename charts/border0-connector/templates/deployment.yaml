@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: border0-connector
+  name: {{ include "border0-connector.fullname" . }}
   labels:
-    app: border0-connector
+    {{- include "border0-connector.labels" . | nindent 4 }}
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
-      app: border0-connector
+      {{- include "border0-connector.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: border0-connector
+        {{- include "border0-connector.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: {{ include "border0-connector.generatedServiceAccountName" . }}
       containers:
         - name: border0-connector
 {{- if .Values.image.override }}
@@ -29,7 +29,7 @@ spec:
 {{- if .Values.config.inviteCode }}
             - "--invite={{ .Values.config.inviteCode }}"
             - "--token-persistence-mode=k8s-secret"
-            - "--k8s-secret={{ .Values.config.secretName }}"
+            - "--k8s-secret={{ include "border0-connector.generatedSecretName" . }}"
 {{- else }}
             - "--config=/etc/border0-connector/config.yaml"
 {{- end }}
@@ -47,7 +47,7 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ .Values.config.secretName }}
+            secretName: {{ include "border0-connector.generatedSecretName" . }}
 {{- if .Values.config.inviteCode }}
             optional: true
 {{- end }}
