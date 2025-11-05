@@ -5,11 +5,15 @@ image:
   override: null
 
 serviceAccount:
-  name: border0-connector
+  # If not set, auto-generates based on release name (e.g., <release-name>-border0-connector)
+  # Set to a specific value to override (e.g., "my-custom-sa-name")
+  name: ""
 
 rbac:
   create: true
-  name: border0-connector
+  # If not set, auto-generates based on release name (e.g., <release-name>-border0-connector)
+  # Set to a specific value to override (e.g., "my-custom-role-name")
+  name: ""
 
 config:
   # Provide either a token OR an inviteCode
@@ -17,7 +21,3 @@ config:
   # and persist it in the Kubernetes secret
   token: ""
   inviteCode: ""
-
-  # Kubernetes secret configuration (used when inviteCode is provided)
-  # The secret will be automatically updated with the exchanged token
-  secretName: "connector-config"

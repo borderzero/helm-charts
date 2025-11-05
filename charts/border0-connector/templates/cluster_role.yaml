@@ -2,7 +2,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Values.rbac.name }}
+  name: {{ include "border0-connector.generatedClusterRoleName" . }}
+  labels:
+    {{- include "border0-connector.labels" . | nindent 4 }}
 rules:
   # Full cluster access for connector functionality
   - apiGroups: ["*"]
