@@ -4,11 +4,16 @@ kind: ClusterRole
 metadata:
   name: {{ .Values.rbac.name }}
 rules:
+  # Full cluster access for connector functionality
   - apiGroups: ["*"]
     resources: ["*"]
     verbs: ["*"]
+  # Impersonation permissions
   - apiGroups: [""]
     resources: ["users", "groups", "serviceaccounts"]
     verbs: ["impersonate"]
+  # Note: When using invite codes (config.inviteCode), the connector requires permission
+  # to create/update secrets in the release namespace for token persistence.
+  # These permissions are included in the wildcard rule above.
 {{- end }}
 

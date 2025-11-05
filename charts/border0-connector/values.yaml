@@ -12,4 +12,12 @@ rbac:
   name: border0-connector
 
 config:
-  token: "REPLACE_ME_WITH_YOUR_TOKEN"
+  # Provide either a token OR an inviteCode
+  # If inviteCode is provided, the connector will exchange it for a token
+  # and persist it in the Kubernetes secret
+  token: ""
+  inviteCode: ""
+
+  # Kubernetes secret configuration (used when inviteCode is provided)
+  # The secret will be automatically updated with the exchanged token
+  secretName: "connector-config"
