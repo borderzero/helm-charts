@@ -1,0 +1,20 @@
+# When using invite codes (config.inviteCode), the connector requires permission
+# to create/update secrets in the release namespace for token persistence.
+
+{{- if .Values.config.inviteCode }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "border0-connector.generatedRoleName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "border0-connector.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "border0-connector.generatedServiceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "border0-connector.generatedRoleName" . }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

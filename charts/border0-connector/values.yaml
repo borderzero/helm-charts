@@ -10,7 +10,10 @@ serviceAccount:
   name: ""
 
 rbac:
-  create: true
+  # ClusterRole mode: "api-admin" or "none"
+  # - api-admin: Full cluster access (default)
+  # - none: No ClusterRole created
+  clusterRoleMode: "api-admin"
   # If not set, auto-generates based on release name (e.g., <release-name>-border0-connector)
   # Set to a specific value to override (e.g., "my-custom-role-name")
   name: ""

@@ -1,4 +1,5 @@
-{{- if .Values.rbac.create }}
+{{- include "border0-connector.validateRbacMode" . -}}
+{{- if include "border0-connector.shouldCreateClusterRole" . }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:

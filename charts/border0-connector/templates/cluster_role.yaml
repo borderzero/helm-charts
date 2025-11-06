@@ -1,4 +1,5 @@
-{{- if .Values.rbac.create }}
+{{- include "border0-connector.validateRbacMode" . -}}
+{{- if include "border0-connector.shouldCreateClusterRole" . }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -14,8 +15,5 @@ rules:
   - apiGroups: [""]
     resources: ["users", "groups", "serviceaccounts"]
     verbs: ["impersonate"]
-  # Note: When using invite codes (config.inviteCode), the connector requires permission
-  # to create/update secrets in the release namespace for token persistence.
-  # These permissions are included in the wildcard rule above.
 {{- end }}
 
