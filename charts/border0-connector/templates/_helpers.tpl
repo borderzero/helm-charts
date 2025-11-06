@@ -73,8 +73,26 @@ Generate the name of the cluster role to use
 {{- end }}
 
 {{/*
+Generate the name of the role to use for secret management
+*/}}
+{{- define "border0-connector.generatedRoleName" -}}
+{{- include "border0-connector.fullname" . }}-secret-manager
+{{- end }}
+
+{{/*
 Generate the name of the secret to use
 */}}
 {{- define "border0-connector.generatedSecretName" -}}
 {{- include "border0-connector.fullname" . }}-config
+{{- end }}
+
+{{/*
+Check if ClusterRole should be created based on rbac.clusterRoleMode
+Returns "true" only if mode is "api-admin".
+*/}}
+{{- define "border0-connector.shouldCreateClusterRole" -}}
+{{- $mode := .Values.rbac.clusterRoleMode | toString | trim -}}
+{{- if eq $mode "api-admin" -}}
+true
+{{- end -}}
 {{- end }}
