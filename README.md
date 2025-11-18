@@ -44,3 +44,35 @@ helm install border0-connector border0/border0-connector \
 ```
 
 **Note:** The chart uses the Helm release namespace for namespaced resources. Set the namespace with `--namespace <namespace> --create-namespace`.
+
+### Upgrading a Helm-Managed Connector
+
+#### When Using `image.tag: latest` (Default)
+
+If you are using the default `image.tag: latest`, you may upgrade by restarting the deployment:
+
+```bash
+kubectl --namespace "YOUR_CUSTOM_NS" rollout restart deployment border0-connector
+```
+
+This will pull the latest version of the image (assuming `image.pullPolicy: Always` is set).
+
+#### When Using a Specific Image Tag
+
+If you've set a specific `image.tag` (e.g., `v1.2.0`), you need to use `helm upgrade` to update to a new version:
+
+```bash
+helm upgrade border0-connector border0/border0-connector \
+  --namespace "YOUR_CUSTOM_NS" \
+  --reuse-values \
+  --set image.tag="v1.2.3"
+```
+
+Or if using `image.override`:
+
+```bash
+helm upgrade border0-connector border0/border0-connector \
+  --namespace "YOUR_CUSTOM_NS" \
+  --reuse-values \
+  --set image.override="ghcr.io/borderzero/border0:v1.2.3"
+```
