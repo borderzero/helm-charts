@@ -9,6 +9,14 @@ serviceAccount:
   # Auto-generated from release name if not set
   name: ""
 
+rbac:
+  # ClusterRole mode: "api-admin" or "none"
+  # - api-admin: Full cluster access + impersonation (default, required for Kubernetes API proxying)
+  # - none: No ClusterRole created
+  clusterRoleMode: "api-admin"
+  # Auto-generated from release name if not set
+  name: ""
+
 config:
   # Invite code from the Border0 admin portal (required)
   inviteCode: ""

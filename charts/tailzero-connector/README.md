@@ -1,6 +1,6 @@
-# border0-connector
+# tailzero-connector
 
-Helm chart to deploy the Border0 Connector
+Helm chart to deploy the Tailzero Connector
 
 ## Installation
 
@@ -11,34 +11,35 @@ helm repo add border0 https://borderzero.github.io/helm-charts
 helm repo update
 ```
 
-### Using an Invite Code (preferred)
-
 Get an invite code from the Border0 admin portal connectors page, then:
 
 ```bash
-helm install border0-connector border0/border0-connector \
+helm install tailzero-connector border0/tailzero-connector \
   --set config.inviteCode="YOUR_INVITE_CODE_HERE"
 ```
 
-The connector will exchange the invite code for a token and persist it in a Kubernetes secret automatically.
-
-### Using a Pre-Generated Token
-
-```bash
-helm install border0-connector border0/border0-connector \
-  --set config.token="eyJhbGciOiJIUzI1NiIsIn..."
-```
+The connector will exchange the invite code for credentials (connector token + Tailscale auth key)
+and persist them in a Kubernetes secret automatically. On restart, credentials are loaded from
+the secret — no re-exchange needed.
 
 ## Advanced Configuration
 
 ### Custom Container Image
 
-To run a custom container image:
+```bash
+helm install tailzero-connector border0/tailzero-connector \
+  --set config.inviteCode="YOUR_INVITE_CODE" \
+  --set image.override="ghcr.io/borderzero/tailzero:dev"
+```
+
+### Custom Hostname
+
+By default the connector uses the Helm release name as its hostname. Override it with:
 
 ```bash
-helm install border0-connector border0/border0-connector \
+helm install tailzero-connector border0/tailzero-connector \
   --set config.inviteCode="YOUR_INVITE_CODE" \
-  --set image.override="ghcr.io/borderzero/border0:dev"
+  --set config.hostname="my-connector"
 ```
 
 ### RBAC Modes
@@ -46,31 +47,29 @@ helm install border0-connector border0/border0-connector \
 The chart supports two RBAC modes for cluster-level permissions:
 
 #### api-admin (default)
-Full cluster access for Border0 sockets that require Kubernetes API access. This grants wildcard permissions across the cluster.
+Full cluster access + impersonation, required for Kubernetes API proxying through tailzero.
 
 ```bash
-helm install border0-connector border0/border0-connector \
+helm install tailzero-connector border0/tailzero-connector \
   --set config.inviteCode="YOUR_INVITE_CODE" \
   --set rbac.clusterRoleMode="api-admin"
 ```
 
 #### none
-No cluster-level permissions. Use this when you don't need cluster-wide access.
+No ClusterRole created. Use this when you don't need Kubernetes API proxying.
 
 ```bash
-helm install border0-connector border0/border0-connector \
+helm install tailzero-connector border0/tailzero-connector \
   --set config.inviteCode="YOUR_INVITE_CODE" \
   --set rbac.clusterRoleMode="none"
 ```
 
-**Note:** When using invite codes, a namespaced Role for secret management is always created regardless of the `clusterRoleMode` setting.
+**Note:** A namespaced Role for credential secret management is always created regardless of `clusterRoleMode`.
 
 ### Custom Namespace
 
-The chart uses the Helm release namespace for namespaced resources. Set the namespace with `--namespace`:
-
 ```bash
-helm install border0-connector border0/border0-connector \
+helm install tailzero-connector border0/tailzero-connector \
   --set config.inviteCode="YOUR_INVITE_CODE" \
   --namespace "YOUR_CUSTOM_NS" --create-namespace
 ```
@@ -79,44 +78,31 @@ helm install border0-connector border0/border0-connector \
 
 ### When Using `image.tag: latest` (Default)
 
-If you are using the default `image.tag: latest`, you may upgrade by restarting the deployment:
+Restart the deployment to pull the latest image:
 
 ```bash
-kubectl --namespace "YOUR_CUSTOM_NS" rollout restart deployment border0-connector
+kubectl --namespace "YOUR_NS" rollout restart deployment tailzero-connector
 ```
-
-This will pull the latest version of the image (assuming `image.pullPolicy: Always` is set).
 
 ### When Using a Specific Image Tag
 
-If you've set a specific `image.tag` (e.g., `v1.2.0`), you need to use `helm upgrade` to update to a new version:
-
 ```bash
-helm upgrade border0-connector border0/border0-connector \
-  --namespace "YOUR_CUSTOM_NS" \
+helm upgrade tailzero-connector border0/tailzero-connector \
+  --namespace "YOUR_NS" \
   --reuse-values \
   --set image.tag="v1.2.3"
-```
-
-Or if using `image.override`:
-
-```bash
-helm upgrade border0-connector border0/border0-connector \
-  --namespace "YOUR_CUSTOM_NS" \
-  --reuse-values \
-  --set image.override="ghcr.io/borderzero/border0:v1.2.3"
 ```
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `config.token` | string | `""` | Connector token (use this OR inviteCode) |
-| `config.inviteCode` | string | `""` | Invite code for automatic token exchange (recommended) |
-| `image.repository` | string | `"ghcr.io/borderzero/border0"` | Container image repository |
+| `config.inviteCode` | string | `""` | Invite code from the Border0 portal (required) |
+| `config.hostname` | string | `""` | Connector hostname (defaults to release name) |
+| `image.repository` | string | `"ghcr.io/borderzero/tailzero"` | Container image repository |
 | `image.tag` | string | `"latest"` | Container image tag |
 | `image.pullPolicy` | string | `"Always"` | Image pull policy |
 | `image.override` | string | `null` | Override the full image reference |
 | `serviceAccount.name` | string | `""` | Service account name (auto-generated if empty) |
-| `rbac.clusterRoleMode` | string | `"api-admin"` | ClusterRole mode: "api-admin" or "none" |
+| `rbac.clusterRoleMode` | string | `"api-admin"` | ClusterRole mode: `"api-admin"` or `"none"` |
 | `rbac.name` | string | `""` | ClusterRole name (auto-generated if empty) |

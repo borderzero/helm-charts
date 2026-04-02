@@ -1,17 +1,17 @@
-{{- include "border0-connector.validateRbacMode" . -}}
-{{- if include "border0-connector.shouldCreateClusterRole" . }}
+{{- include "tailzero-connector.validateRbacMode" . -}}
+{{- if include "tailzero-connector.shouldCreateClusterRole" . }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "border0-connector.generatedClusterRoleName" . }}
+  name: {{ include "tailzero-connector.generatedClusterRoleName" . }}
   labels:
-    {{- include "border0-connector.labels" . | nindent 4 }}
+    {{- include "tailzero-connector.labels" . | nindent 4 }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "border0-connector.generatedServiceAccountName" . }}
+    name: {{ include "tailzero-connector.generatedServiceAccountName" . }}
     namespace: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole
-  name: {{ include "border0-connector.generatedClusterRoleName" . }}
+  name: {{ include "tailzero-connector.generatedClusterRoleName" . }}
   apiGroup: rbac.authorization.k8s.io
 {{- end }}

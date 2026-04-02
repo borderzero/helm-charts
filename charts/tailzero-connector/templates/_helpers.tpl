@@ -62,6 +62,17 @@ Generate the name of the service account to use
 {{- end }}
 
 {{/*
+Generate the name of the cluster role to use
+*/}}
+{{- define "tailzero-connector.generatedClusterRoleName" -}}
+{{- if ne .Values.rbac.name "" }}
+{{- .Values.rbac.name }}
+{{- else }}
+{{- include "tailzero-connector.fullname" . }}
+{{- end }}
+{{- end }}
+
+{{/*
 Generate the name of the role to use for secret management
 */}}
 {{- define "tailzero-connector.generatedRoleName" -}}
@@ -73,4 +84,15 @@ Generate the name of the Kubernetes secret used for credential caching
 */}}
 {{- define "tailzero-connector.generatedSecretName" -}}
 {{- include "tailzero-connector.fullname" . }}-credentials
+{{- end }}
+
+{{/*
+Check if ClusterRole should be created based on rbac.clusterRoleMode.
+Returns "true" only if mode is "api-admin".
+*/}}
+{{- define "tailzero-connector.shouldCreateClusterRole" -}}
+{{- $mode := .Values.rbac.clusterRoleMode | toString | trim -}}
+{{- if eq $mode "api-admin" -}}
+true
+{{- end -}}
 {{- end }}
