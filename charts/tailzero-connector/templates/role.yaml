@@ -1,0 +1,20 @@
+# The connector requires permission to create/update the credential cache secret
+# in the release namespace (used to persist the connector token and Tailscale auth key).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "tailzero-connector.generatedRoleName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tailzero-connector.labels" . | nindent 4 }}
+rules:
+  # Allow creating any secret in the namespace.
+  # This is as granular as the "create" verb can be.
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create"]
+  # Allow managing only the specific credential cache secret for this release.
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["{{ include "tailzero-connector.generatedSecretName" . }}"]
+    verbs: ["get", "list", "update", "patch"]

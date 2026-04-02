@@ -1,0 +1,42 @@
+{{- include "tailzero-connector.validateConfig" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tailzero-connector.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tailzero-connector.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "tailzero-connector.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "tailzero-connector.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "tailzero-connector.generatedServiceAccountName" . }}
+      containers:
+        - name: tailzero-connector
+{{- if .Values.image.override }}
+          image: "{{ .Values.image.override }}"
+{{- else }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+{{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "-border0-invite-code={{ .Values.config.inviteCode }}"
+            - "-cache-k8s-namespace={{ .Release.Namespace }}"
+            - "-cache-k8s-secret-name={{ include "tailzero-connector.generatedSecretName" . }}"
+{{- if .Values.config.hostname }}
+            - "-hostname={{ .Values.config.hostname }}"
+{{- else }}
+            - "-hostname={{ .Release.Name }}"
+{{- end }}
+            - "-statedir=/var/lib/tailzero"
+          volumeMounts:
+            - name: tailzero-state
+              mountPath: /var/lib/tailzero
+      volumes:
+        - name: tailzero-state
+          emptyDir: {}

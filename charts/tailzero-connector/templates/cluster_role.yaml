@@ -1,0 +1,19 @@
+{{- include "border0-connector.validateRbacMode" . -}}
+{{- if include "border0-connector.shouldCreateClusterRole" . }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "border0-connector.generatedClusterRoleName" . }}
+  labels:
+    {{- include "border0-connector.labels" . | nindent 4 }}
+rules:
+  # Full cluster access for connector functionality
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+  # Impersonation permissions
+  - apiGroups: [""]
+    resources: ["users", "groups", "serviceaccounts"]
+    verbs: ["impersonate"]
+{{- end }}
+
