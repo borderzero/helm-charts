@@ -1,0 +1,24 @@
+image:
+  repository: ghcr.io/borderzero/tailzero
+  tag: latest
+  pullPolicy: Always
+  # Set to override the full image reference (e.g. "ghcr.io/borderzero/tailzero:v1.2.3")
+  override: null
+
+serviceAccount:
+  # Auto-generated from release name if not set
+  name: ""
+
+rbac:
+  # ClusterRole mode: "api-admin" or "none"
+  # - api-admin: Full cluster access + impersonation (default, required for Kubernetes API proxying)
+  # - none: No ClusterRole created
+  clusterRoleMode: "api-admin"
+  # Auto-generated from release name if not set
+  name: ""
+
+config:
+  # Invite code from the Border0 admin portal (required)
+  inviteCode: ""
+  # Connector hostname. Defaults to the Helm release name if not set.
+  hostname: ""

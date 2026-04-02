@@ -1,0 +1,6 @@
+apiVersion: v2
+name: tailzero-connector
+description: Helm chart for deploying the Tailzero Connector
+type: application
+version: 0.1.0
+appVersion: "latest"
