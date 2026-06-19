@@ -29,6 +29,19 @@ config:
   # Connector hostname. Defaults to the Helm release name if not set.
   hostname: ""
 
+# Persist Tailscale node state (/var/lib/tailzero) so the connector keeps the same
+# identity across restarts. When false, state lives on an emptyDir and each restart
+# registers a new Tailscale machine.
+persistence:
+  enabled: true
+  size: 1Gi
+  # "" = cluster default StorageClass.
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+  # Mount an existing PVC instead of creating one.
+  existingClaim: ""
+
 # Extra environment variables for the connector container (standard k8s env schema)
 extraEnv: []
 # Extra volumes attached to the pod
