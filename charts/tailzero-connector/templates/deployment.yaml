@@ -41,7 +41,7 @@ spec:
             - "-statedir=/var/lib/tailzero"
             # Persist the Tailscale node identity in a Kubernetes Secret (not on the
             # ephemeral pod disk), so a restart reconnects the same machine.
-            - "-state=kube:{{ include "tailzero-connector.stateSecretName" . }}"
+            - "-state-source=kube:{{ include "tailzero-connector.stateSecretName" . }}"
           env:
             # Consumed by the kube state store for status Events.
             - name: POD_NAME

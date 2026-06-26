@@ -22,6 +22,22 @@ The connector will exchange the invite code for credentials (connector token + T
 and persist them in a Kubernetes secret automatically. On restart, credentials are loaded from
 the secret — no re-exchange needed.
 
+## State persistence
+
+The connector persists its **Tailscale node identity** (the node key) in a Kubernetes Secret
+named `<release>-state`, using Tailscale's `kube:` state store. As a result it keeps the
+**same Tailscale machine across pod restarts and upgrades** — no PersistentVolume required.
+(Credentials are cached separately in `<release>-credentials`.)
+
+- The chart pre-creates the Secret and grants the connector RBAC to read/write it, and runs
+  the Deployment with `strategy: Recreate` so only one pod owns the identity at a time.
+- Override the Secret name with `--set stateSecretName="my-state"`.
+- Requires a connector image that supports the `-state-source` flag.
+
+> Upgrading from a version without state persistence registers a new Tailscale machine
+> **once** (the old one goes inactive — remove it from the Tailscale admin console). After
+> that, restarts reconnect the same machine.
+
 ## Advanced Configuration
 
 ### Custom Container Image
@@ -64,7 +80,7 @@ helm install tailzero-connector border0/tailzero-connector \
   --set rbac.clusterRoleMode="none"
 ```
 
-**Note:** A namespaced Role for credential secret management is always created regardless of `clusterRoleMode`.
+**Note:** A namespaced Role for managing the credential-cache and state secrets is always created regardless of `clusterRoleMode`.
 
 ### Custom Namespace
 
@@ -99,6 +115,7 @@ helm upgrade tailzero-connector border0/tailzero-connector \
 |-----|------|---------|-------------|
 | `config.inviteCode` | string | `""` | Invite code from the Border0 portal (required) |
 | `config.hostname` | string | `""` | Connector hostname (defaults to release name) |
+| `stateSecretName` | string | `""` | Name of the Secret used to persist the Tailscale node identity (defaults to `<release>-state`) |
 | `image.repository` | string | `"ghcr.io/borderzero/tailzero"` | Container image repository |
 | `image.tag` | string | `"latest"` | Container image tag |
 | `image.pullPolicy` | string | `"Always"` | Image pull policy |
