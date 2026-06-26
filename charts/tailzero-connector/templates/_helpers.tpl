@@ -87,6 +87,18 @@ Generate the name of the Kubernetes secret used for credential caching
 {{- end }}
 
 {{/*
+Generate the name of the Kubernetes secret used to persist the Tailscale node
+state (the node key / machine identity). Overridable via .Values.stateSecretName.
+*/}}
+{{- define "tailzero-connector.stateSecretName" -}}
+{{- if .Values.stateSecretName }}
+{{- .Values.stateSecretName }}
+{{- else }}
+{{- include "tailzero-connector.fullname" . }}-state
+{{- end }}
+{{- end }}
+
+{{/*
 Check if ClusterRole should be created based on rbac.clusterRoleMode.
 Returns "true" only if mode is "api-admin".
 */}}

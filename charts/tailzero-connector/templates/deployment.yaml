@@ -7,12 +7,11 @@ metadata:
   labels:
     {{- include "tailzero-connector.labels" . | nindent 4 }}
 spec:
-  {{- if .Values.persistence.enabled }}
-  # Recreate so the old pod releases the RWO volume before the new one starts;
-  # RollingUpdate would surge a second pod and hang on a multi-attach error.
+  # Recreate so only one connector pod runs at a time. Two pods would contend for
+  # the same kube state Secret (the Tailscale node identity); RollingUpdate would
+  # surge a second pod and momentarily duplicate the machine.
   strategy:
     type: Recreate
-  {{- end }}
   selector:
     matchLabels:
       {{- include "tailzero-connector.selectorLabels" . | nindent 6 }}
@@ -40,8 +39,20 @@ spec:
             - "-hostname={{ .Release.Name }}"
 {{- end }}
             - "-statedir=/var/lib/tailzero"
-          {{- with .Values.extraEnv }}
+            # Persist the Tailscale node identity in a Kubernetes Secret (not on the
+            # ephemeral pod disk), so a restart reconnects the same machine.
+            - "-state=kube:{{ include "tailzero-connector.stateSecretName" . }}"
           env:
+            # Consumed by the kube state store for status Events.
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+          {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
@@ -51,13 +62,10 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       volumes:
+        # Ephemeral: only runtime/log files live here now. The Tailscale node
+        # identity is persisted in the kube state Secret (see -state above).
         - name: tailzero-state
-        {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-state" (include "tailzero-connector.fullname" .)) }}
-        {{- else }}
           emptyDir: {}
-        {{- end }}
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
