@@ -9,7 +9,7 @@ Border0 managed Helm charts:
 
 ## tailzero-connector
 
-For Tailscale-enabled organizations. The connector exchanges an invite code for credentials (connector token + Tailscale auth key) and persists them in a Kubernetes secret automatically.
+For Tailscale-enabled organizations. The connector exchanges an invite code for credentials (connector token + Tailscale auth key) and persists them in a Kubernetes secret automatically. It also persists its Tailscale node identity in a Secret, so it keeps the same Tailscale machine across pod restarts — no PersistentVolume needed.
 
 Add this Helm repository:
 

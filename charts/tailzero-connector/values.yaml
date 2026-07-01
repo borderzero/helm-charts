@@ -29,6 +29,11 @@ config:
   # Connector hostname. Defaults to the Helm release name if not set.
   hostname: ""
 
+# The Tailscale node identity is persisted in a Kubernetes Secret (via the kube:
+# state store), so it survives pod restarts without any volume. Override the
+# Secret name here if needed; defaults to "<release>-state".
+stateSecretName: ""
+
 # Extra environment variables for the connector container (standard k8s env schema)
 extraEnv: []
 # Extra volumes attached to the pod

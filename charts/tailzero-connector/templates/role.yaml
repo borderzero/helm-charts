@@ -1,5 +1,6 @@
-# The connector requires permission to create/update the credential cache secret
-# in the release namespace (used to persist the connector token and Tailscale auth key).
+# The connector needs to manage two Secrets in the release namespace:
+#   - the credential cache secret (connector token + Tailscale auth key), and
+#   - the state secret (the Tailscale node key / machine identity, via the kube: store).
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -13,8 +14,14 @@ rules:
   - apiGroups: [""]
     resources: ["secrets"]
     verbs: ["create"]
-  # Allow managing only the specific credential cache secret for this release.
+  # Allow managing only this release's credential cache and state secrets.
   - apiGroups: [""]
     resources: ["secrets"]
-    resourceNames: ["{{ include "tailzero-connector.generatedSecretName" . }}"]
+    resourceNames:
+      - "{{ include "tailzero-connector.generatedSecretName" . }}"
+      - "{{ include "tailzero-connector.stateSecretName" . }}"
     verbs: ["get", "list", "update", "patch"]
+  # The kube: state store writes status Events about its own Pod (non-fatal if absent).
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch", "get"]
