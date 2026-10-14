@@ -1,9 +1,14 @@
 {{/*
-Validate that config.inviteCode is set (required).
+Validate that exactly one of config.inviteCode or config.token is set.
 */}}
 {{- define "tailzero-connector.validateConfig" -}}
-{{- if eq (.Values.config.inviteCode | trim) "" -}}
-{{- fail "config.inviteCode is required" -}}
+{{- $invite := .Values.config.inviteCode | default "" | trim -}}
+{{- $token := .Values.config.token | default "" | trim -}}
+{{- if and (eq $invite "") (eq $token "") -}}
+{{- fail "one of config.inviteCode or config.token is required" -}}
+{{- end -}}
+{{- if and (ne $invite "") (ne $token "") -}}
+{{- fail "config.inviteCode and config.token are mutually exclusive; set only one" -}}
 {{- end -}}
 {{- end }}
 

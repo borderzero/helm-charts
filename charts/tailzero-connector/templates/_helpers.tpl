@@ -87,6 +87,14 @@ Generate the name of the Kubernetes secret used for credential caching
 {{- end }}
 
 {{/*
+Generate the name of the Kubernetes secret holding the user-supplied connector
+token (only rendered when .Values.config.token is set).
+*/}}
+{{- define "tailzero-connector.tokenSecretName" -}}
+{{- include "tailzero-connector.fullname" . }}-token
+{{- end }}
+
+{{/*
 Generate the name of the Kubernetes secret used to persist the Tailscale node
 state (the node key / machine identity). Overridable via .Values.stateSecretName.
 */}}

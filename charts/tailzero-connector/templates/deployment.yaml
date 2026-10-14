@@ -30,7 +30,9 @@ spec:
 {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
+{{- if .Values.config.inviteCode }}
             - "-border0-invite-code={{ .Values.config.inviteCode }}"
+{{- end }}
             - "-cache-k8s-namespace={{ .Release.Namespace }}"
             - "-cache-k8s-secret-name={{ include "tailzero-connector.generatedSecretName" . }}"
 {{- if .Values.config.hostname }}
@@ -52,6 +54,14 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.uid
+            {{- if .Values.config.token }}
+            # Equivalent to -border0-token, kept out of the pod args.
+            - name: BORDER0_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "tailzero-connector.tokenSecretName" . }}
+                  key: token
+            {{- end }}
           {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
