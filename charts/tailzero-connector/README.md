@@ -22,6 +22,20 @@ The connector will exchange the invite code for credentials (connector token + T
 and persist them in a Kubernetes secret automatically. On restart, credentials are loaded from
 the secret — no re-exchange needed.
 
+### Using a Pre-Generated Token
+
+Alternatively, provide a Border0 connector token directly (equivalent to `-border0-token`):
+
+```bash
+helm install tailzero-connector border0/tailzero-connector \
+  --set config.token="eyJhbGciOiJIUzI1NiIsIn..."
+```
+
+The token is stored in a `<release>-token` Secret and passed to the connector as
+`BORDER0_TOKEN`. On each start the connector exchanges it for a Tailscale auth key; once the
+node identity is persisted in `<release>-state`, restarts reconnect the same machine. Set
+exactly one of `config.inviteCode` or `config.token`.
+
 ## State persistence
 
 The connector persists its **Tailscale node identity** (the node key) in a Kubernetes Secret
@@ -113,7 +127,8 @@ helm upgrade tailzero-connector border0/tailzero-connector \
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `config.inviteCode` | string | `""` | Invite code from the Border0 portal (required) |
+| `config.inviteCode` | string | `""` | Invite code from the Border0 portal (use this OR `config.token`) |
+| `config.token` | string | `""` | Pre-generated Border0 connector token, passed as `BORDER0_TOKEN` (use this OR `config.inviteCode`) |
 | `config.hostname` | string | `""` | Connector hostname (defaults to release name) |
 | `stateSecretName` | string | `""` | Name of the Secret used to persist the Tailscale node identity (defaults to `<release>-state`) |
 | `image.repository` | string | `"ghcr.io/borderzero/tailzero"` | Container image repository |

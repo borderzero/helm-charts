@@ -24,8 +24,13 @@ rbac:
   name: ""
 
 config:
-  # Invite code from the Border0 admin portal (required)
+  # Provide either an inviteCode OR a token (exactly one is required).
+  # Invite code from the Border0 admin portal. Exchanged on first boot for a
+  # connector token + Tailscale auth key, which are cached in a Kubernetes Secret.
   inviteCode: ""
+  # Pre-generated Border0 connector token (JWT), equivalent to -border0-token.
+  # Stored in a chart-managed Secret and passed to the connector as BORDER0_TOKEN.
+  token: ""
   # Connector hostname. Defaults to the Helm release name if not set.
   hostname: ""
 
