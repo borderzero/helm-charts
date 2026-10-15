@@ -74,6 +74,16 @@ entries:
   tailzero-connector:
   - apiVersion: v2
     appVersion: latest
+    created: "2026-10-15T13:31:13.286110564Z"
+    description: Helm chart for deploying the Tailzero Connector
+    digest: 8d208a2986a91714fabd3583994d37e19da2da4450138af3ac2b6800411b4fde
+    name: tailzero-connector
+    type: application
+    urls:
+    - https://borderzero.github.io/helm-charts/tailzero-connector-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
+    appVersion: latest
     created: "2026-06-26T17:10:52.295487058Z"
     description: Helm chart for deploying the Tailzero Connector
     digest: c8fbfcf989adb4ac165286e3c877b8be56a5724cd51bc3e4523ad18e3b517230
@@ -112,4 +122,4 @@ entries:
     urls:
     - https://borderzero.github.io/helm-charts/tailzero-connector-0.1.0.tgz
     version: 0.1.0
-generated: "2026-06-26T17:10:52.281604568Z"
+generated: "2026-10-15T13:31:13.284937662Z"
