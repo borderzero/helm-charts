@@ -62,6 +62,29 @@ helm install tailzero-connector border0/tailzero-connector \
   --set image.override="ghcr.io/borderzero/tailzero:dev"
 ```
 
+### Security Context
+
+The connector runs with the image defaults unless you set a security context. Both values take
+the standard Kubernetes schema and are empty by default:
+
+```yaml
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+```
+
+These are the fields the Pod Security `restricted` profile requires. If the connector writes
+outside `/var/lib/tailzero` when not running as root, point it there with `extraEnv` (for
+example `HOME`).
+
 ### Custom Hostname
 
 By default the connector uses the Helm release name as its hostname. Override it with:

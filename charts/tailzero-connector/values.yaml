@@ -39,6 +39,13 @@ config:
 # Secret name here if needed; defaults to "<release>-state".
 stateSecretName: ""
 
+# Pod-level security context (standard k8s PodSecurityContext), e.g. runAsNonRoot,
+# runAsUser, fsGroup, seccompProfile. Empty by default.
+podSecurityContext: {}
+# Security context for the connector container (standard k8s SecurityContext), e.g.
+# allowPrivilegeEscalation, capabilities, readOnlyRootFilesystem. Empty by default.
+securityContext: {}
+
 # Extra environment variables for the connector container (standard k8s env schema)
 extraEnv: []
 # Extra volumes attached to the pod
